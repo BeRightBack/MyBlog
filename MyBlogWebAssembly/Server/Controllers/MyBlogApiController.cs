@@ -1,15 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MyBlog.Data.Interfaces;
 using MyBlog.Data.Models;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 
 namespace MyBlogWebAssembly.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class MyBlogApiController : ControllerBase
+    public class MyBlogApiController:ControllerBase
     {
         //<Constructor>
         internal readonly IMyBlogApi api;
