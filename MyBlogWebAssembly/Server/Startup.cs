@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Authentication;
 using System.IdentityModel.Tokens.Jwt;
 //</IdentityUsing>
 using Microsoft.AspNetCore.Identity;
+using System.Text.Json.Serialization;
+
 namespace MyBlogWebAssembly.Server
 {
     public class Startup
@@ -33,12 +35,12 @@ namespace MyBlogWebAssembly.Server
         public void ConfigureServices(IServiceCollection services)
         {
             //<AddMyBlogDataServices>
-            services.AddDbContextFactory<MyBlogDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("sqlConnection")));
+            services.AddDbContextFactory<MyBlogDbContext>(opt => opt => opt.UseSqlServer(Configuration.GetConnectionString("sqlConnection")));
             services.AddScoped<IMyBlogApi, MyBlogApiServerSide>();
             //</AddMyBlogDataServices>
 
             //<Identity>
-            services.AddDbContext<MyBlogDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("sqlConnection")));
+            services.AddDbContext<MyBlogDbContext>(opt => opt.UseSqlite(Configuration.GetConnectionString("MyBlogDB")));
 
             services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddRoles<IdentityRole>()
@@ -60,7 +62,11 @@ namespace MyBlogWebAssembly.Server
             services.AddDatabaseDeveloperPageExceptionFilter();
             //</Identity>
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+                options.JsonSerializerOptions.PropertyNamingPolicy = null;
+            });
             services.AddRazorPages();
             
         }

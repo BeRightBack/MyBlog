@@ -2,17 +2,30 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+	  <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Markdig" Version="0.25.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web.Extensions" Version="5.0.0-preview9.20513.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.7" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
+    <Compile Remove="Components\BootstrapCssClassProvider.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Nuget.config" />
+  </ItemGroup>
+<!--<Nuget>-->
+  <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.25.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web.Extensions" Version="5.0.0-preview9.20513.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.sqlite" Version="5.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.7" />
+  </ItemGroup>
+<!--</Nuget>-->
+  <ItemGroup>
     <ProjectReference Include="..\MyBlog.Data\MyBlog.Data.csproj" />
+    <ProjectReference Include="..\MyBlog.Shared\MyBlog.Shared.csproj" />
   </ItemGroup>
 
 </Project>

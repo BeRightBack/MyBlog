@@ -1,25 +1,22 @@
 ﻿using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Options;
 using MyBlog.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyBlog.Data
 {
     public class MyBlogDbContext : ApiAuthorizationDbContext<AppUser>
     {
         public MyBlogDbContext(DbContextOptions options) : base(options, new OperationalStoreOptionsMigrations())
-        { }        
-        
+        { }
+
         public DbSet<BlogPost> BlogPosts { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Tag> Tags { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -33,7 +30,7 @@ namespace MyBlog.Data
         public MyBlogDbContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<MyBlogDbContext>();
-            optionsBuilder.UseSqlServer("server=(localdb)\\mssqllocaldb; database=MyBlog_db; integrated security=true");
+            optionsBuilder.UseSqlite("Data Source = ../MyBlog.db");
 
             return new MyBlogDbContext(optionsBuilder.Options);
         }

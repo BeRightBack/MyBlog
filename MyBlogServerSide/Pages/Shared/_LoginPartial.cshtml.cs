@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace MyBlogServerSide.Pages.Shared
+namespace MyBlogServerSide.Shared
 {
     public class _LoginPartialModel : PageModel
     {
