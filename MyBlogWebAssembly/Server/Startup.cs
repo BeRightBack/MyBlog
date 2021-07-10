@@ -9,6 +9,10 @@ using Microsoft.Extensions.Hosting;
 using MyBlog.Data;
 using MyBlog.Data.Interfaces;
 using System.Linq;
+using MyBlog.Data.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace MyBlogWebAssembly.Server
 {
@@ -28,6 +32,26 @@ namespace MyBlogWebAssembly.Server
             services.AddDbContextFactory<MyBlogDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("sqlConnection")));
             services.AddScoped<IMyBlogApi, MyBlogApiServerSide>();
 
+            services.AddDbContext<MyBlogDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("sqlConnection")));
+            services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = false)
+            .AddRoles<IdentityRole>()
+            .AddEntityFrameworkStores<MyBlogDbContext>();
+
+            services.AddIdentityServer()
+                .AddApiAuthorization<AppUser, MyBlogDbContext>(options =>
+                {
+                    options.IdentityResources["openid"].UserClaims.Add("name");
+                    options.ApiResources.Single().UserClaims.Add("name");
+                    options.IdentityResources["openid"].UserClaims.Add("role");
+                    options.ApiResources.Single().UserClaims.Add("role");
+                });
+            JwtSecurityTokenHandler.DefaultInboundClaimFilter.Remove("role");
+
+            services.AddAuthentication()
+                .AddIdentityServerJwt();
+
+            //services.AddDatabaseDeveloperPageExceptionFilter();
+
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
@@ -37,6 +61,7 @@ namespace MyBlogWebAssembly.Server
         {
             if (env.IsDevelopment())
             {
+                //app.UseMigrationsEndPoint();
                 app.UseDeveloperExceptionPage();
                 app.UseWebAssemblyDebugging();
             }
@@ -52,6 +77,10 @@ namespace MyBlogWebAssembly.Server
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseIdentityServer();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
